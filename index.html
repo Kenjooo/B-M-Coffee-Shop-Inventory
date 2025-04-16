@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brew&Match System | Inventory</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-coffee"></i>
+                <h1>Brew & Match</h1>
+            </div>
+            
+            <nav class="nav-menu">
+                <ul>
+                    <li class="active" data-section="dashboard">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Dashboard</span>
+                    </li>
+                    <li data-section="inventory">
+                        <i class="fas fa-boxes"></i>
+                        <span>Inventory</span>
+                    </li>
+                    <li data-section="add-item">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Add Item</span>
+                    </li>
+                    <li data-section="reports">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Reports</span>
+                    </li>
+                    <li data-section="settings">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="user-profile">
+                <div class="avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-info">
+                    <span class="username">Admin</span>
+                    <span class="user-email">admin@coffeebeans.com</span>
+                </div>
+                <button id="logout-btn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <h2 id="section-title">Dashboard</h2>
+                <div class="header-actions">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search inventory...">
+                    </div>
+                    <button class="notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="content-section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-box-open"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Total Items</h3>
+                            <p id="total-items">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Low Stock</h3>
+                            <p id="low-stock-items">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Total Value</h3>
+                            <p id="total-value">$0.00</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-times"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Expiring Soon</h3>
+                            <p id="expiring-items">0</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="charts-container">
+                    <div class="chart-card">
+                        <h3>Inventory by Category</h3>
+                        <canvas id="category-chart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Stock Levels</h3>
+                        <canvas id="stock-chart"></canvas>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Inventory Section -->
+            <section id="inventory-section" class="content-section">
+                <div class="inventory-actions">
+                    <div class="filter-controls">
+                        <select id="category-filter">
+                            <option value="">All Categories</option>
+                            <option value="Coffee Beans">Coffee Beans</option>
+                            <option value="Syrups">Syrups</option>
+                            <option value="Milk">Milk</option>
+                            <option value="Pastries">Pastries</option>
+                            <option value="Equipment">Equipment</option>
+                        </select>
+                        <button id="low-stock-filter" class="filter-btn">
+                            <i class="fas fa-filter"></i> Low Stock
+                        </button>
+                        <button id="expiring-filter" class="filter-btn">
+                            <i class="fas fa-filter"></i> Expiring Soon
+                        </button>
+                    </div>
+                    <div class="export-actions">
+                        <button id="export-csv" class="export-btn">
+                            <i class="fas fa-file-csv"></i> Export CSV
+                        </button>
+                        <button id="export-json" class="export-btn">
+                            <i class="fas fa-file-code"></i> Export JSON
+                        </button>
+                        <button id="import-data" class="export-btn">
+                            <i class="fas fa-file-import"></i> Import
+                        </button>
+                        <input type="file" id="file-input" accept=".csv,.json" style="display: none;">
+                    </div>
+                </div>
+                
+                <div class="inventory-table-container">
+                    <table class="inventory-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Expiry Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-table-body">
+                            <!-- Inventory items will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <!-- Add Item Section -->
+            <section id="add-item-section" class="content-section">
+                <h3>Add New Item</h3>
+                <form id="add-item-form" class="item-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="item-name">Item Name</label>
+                            <input type="text" id="item-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="item-category">Category</label>
+                            <select id="item-category" required>
+                                <option value="">Select Category</option>
+                                <option value="Coffee Beans">Coffee Beans</option>
+                                <option value="Syrups">Syrups</option>
+                                <option value="Milk">Milk</option>
+                                <option value="Pastries">Pastries</option>
+                                <option value="Equipment">Equipment</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="item-quantity">Quantity</label>
+                            <input type="number" id="item-quantity" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="item-price">Price ($)</label>
+                            <input type="number" id="item-price" min="0" step="0.01" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="item-expiry">Expiry Date</label>
+                            <input type="date" id="item-expiry">
+                        </div>
+                        <div class="form-group">
+                            <label for="item-image">Image</label>
+                            <input type="file" id="item-image" accept="image/*">
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Item
+                        </button>
+                        <button type="reset" class="btn btn-secondary">
+                            <i class="fas fa-undo"></i> Reset
+                        </button>
+                    </div>
+                </form>
+            </section>
+            
+            <!-- Reports Section -->
+            <section id="reports-section" class="content-section">
+                <h3>Inventory Reports</h3>
+                <div class="report-controls">
+                    <div class="report-type">
+                        <label for="report-type">Report Type:</label>
+                        <select id="report-type">
+                            <option value="stock-levels">Stock Levels</option>
+                            <option value="category-distribution">Category Distribution</option>
+                            <option value="expiry-report">Expiry Report</option>
+                            <option value="value-report">Inventory Value</option>
+                        </select>
+                    </div>
+                    <div class="date-range">
+                        <label for="start-date">From:</label>
+                        <input type="date" id="start-date">
+                        <label for="end-date">To:</label>
+                        <input type="date" id="end-date">
+                    </div>
+                    <button id="generate-report" class="btn btn-primary">
+                        <i class="fas fa-chart-bar"></i> Generate Report
+                    </button>
+                </div>
+                
+                <div class="report-results">
+                    <div class="report-table-container">
+                        <table class="report-table">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Category</th>
+                                    <th>Quantity</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="report-table-body">
+                                <!-- Report data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="report-chart-container">
+                        <canvas id="report-chart"></canvas>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Settings Section -->
+            <section id="settings-section" class="content-section">
+                <h3>Settings</h3>
+                <div class="settings-tabs">
+                    <button class="settings-tab active" data-tab="profile">Profile</button>
+                    <button class="settings-tab" data-tab="notifications">Notifications</button>
+                    <button class="settings-tab" data-tab="preferences">Preferences</button>
+                </div>
+                
+                <div class="settings-content">
+                    <div id="profile-tab" class="settings-tab-content active">
+                        <form id="profile-form">
+                            <div class="form-group">
+                                <label for="profile-username">Username</label>
+                                <input type="text" id="profile-username" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="profile-email">Email</label>
+                                <input type="email" id="profile-email">
+                            </div>
+                            <div class="form-group">
+                                <label for="profile-password">New Password</label>
+                                <input type="password" id="profile-password">
+                            </div>
+                            <div class="form-group">
+                                <label for="profile-confirm-password">Confirm Password</label>
+                                <input type="password" id="profile-confirm-password">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update Profile</button>
+                        </form>
+                    </div>
+                    
+                    <div id="notifications-tab" class="settings-tab-content">
+                        <h4>Notification Preferences</h4>
+                        <div class="notification-options">
+                            <div class="option-item">
+                                <input type="checkbox" id="low-stock-notify" checked>
+                                <label for="low-stock-notify">Low stock alerts</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="checkbox" id="expiry-notify" checked>
+                                <label for="expiry-notify">Expiry alerts</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="checkbox" id="daily-summary" checked>
+                                <label for="daily-summary">Daily summary</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="notification-email">Notification Email</label>
+                            <input type="email" id="notification-email">
+                        </div>
+                        <button id="save-notifications" class="btn btn-primary">Save Preferences</button>
+                    </div>
+                    
+                    <div id="preferences-tab" class="settings-tab-content">
+                        <h4>Application Preferences</h4>
+                        <div class="form-group">
+                            <label for="theme-preference">Theme</label>
+                            <select id="theme-preference">
+                                <option value="light">Light</option>
+                                <option value="dark">Dark</option>
+                                <option value="coffee">Coffee</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="default-view">Default View</label>
+                            <select id="default-view">
+                                <option value="dashboard">Dashboard</option>
+                                <option value="inventory">Inventory</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="low-stock-threshold">Low Stock Threshold</label>
+                            <input type="number" id="low-stock-threshold" min="1" value="5">
+                        </div>
+                        <button id="save-preferences" class="btn btn-primary">Save Preferences</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Edit Item Modal -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Edit Item</h3>
+            <form id="edit-item-form">
+                <input type="hidden" id="edit-item-id">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-item-name">Item Name</label>
+                        <input type="text" id="edit-item-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-item-category">Category</label>
+                        <select id="edit-item-category" required>
+                            <option value="Coffee Beans">Coffee Beans</option>
+                            <option value="Syrups">Syrups</option>
+                            <option value="Milk">Milk</option>
+                            <option value="Pastries">Pastries</option>
+                            <option value="Equipment">Equipment</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-item-quantity">Quantity</label>
+                        <input type="number" id="edit-item-quantity" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-item-price">Price ($)</label>
+                        <input type="number" id="edit-item-price" min="0" step="0.01" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-item-expiry">Expiry Date</label>
+                        <input type="date" id="edit-item-expiry">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-item-image">Image</label>
+                        <input type="file" id="edit-item-image" accept="image/*">
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    <button type="button" id="cancel-edit" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Import Modal -->
+    <div id="import-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Import Data</h3>
+            <div class="import-options">
+                <div class="import-option">
+                    <h4>CSV Format</h4>
+                    <p>Ensure your CSV file has the following columns:</p>
+                    <p>Name, Category, Quantity, Price, Expiry Date (optional)</p>
+                </div>
+                <div class="import-option">
+                    <h4>JSON Format</h4>
+                    <p>JSON should be an array of items with properties:</p>
+                    <p>name, category, quantity, price, expiryDate (optional)</p>
+                </div>
+            </div>
+            <div class="import-actions">
+                <button id="confirm-import" class="btn btn-primary">Import</button>
+                <button id="cancel-import" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

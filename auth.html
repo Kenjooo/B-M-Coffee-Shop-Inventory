@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee Beans | Login</title>
+    <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="coffee-stain"></div>
+        <div class="auth-container">
+            <div class="logo">
+                <i class="fas fa-coffee"></i>
+                <h1>Coffee Beans</h1>
+            </div>
+            
+            <div class="tabs">
+                <button class="tab active" id="login-tab">Login</button>
+                <button class="tab" id="register-tab">Register</button>
+            </div>
+            
+            <form id="login-form" class="auth-form active">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="login-username" placeholder="Username" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="login-password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn">Brew My Coffee <i class="fas fa-mug-hot"></i></button>
+            </form>
+            
+            <form id="register-form" class="auth-form">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="register-username" placeholder="Username" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="register-email" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="register-password" placeholder="Password" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="register-confirm-password" placeholder="Confirm Password" required>
+                </div>
+                <button type="submit" class="btn">Roast My Beans <i class="fas fa-fire"></i></button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="auth.js"></script>
+</body>
+</html>
